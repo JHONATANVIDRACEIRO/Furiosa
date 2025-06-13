@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>FURIOSA_-</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      image-rendering: pixelated;
+      background: url('map.png') no-repeat center center;
+      background-size: cover;
+    }
+    #msgBox {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      padding: 16px;
+      border-radius: 12px;
+      max-width: 90%;
+      text-align: center;
+      font-size: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="320" height="320"></canvas>
+  <div id="msgBox"></div>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const tileSize = 32;
+    const mapSize = 10;
+
+    const player = {
+      x: 1,
+      y: 1,
+      sprite: new Image()
+    };
+    player.sprite.src = "player.png";
+
+    const boxes = [
+      {x: 3, y: 1, message: "❤️ Existem 4 caixas... Cada caixa representa a distância em que você está de mim... Se quiser continuar, me ache... ❤️"},
+      {x: 6, y: 2, message: "❤️ Me deixa feliz que você me procurou. Hoje é um dia especial mesmo que a gente não esteja namorando. Você sempre foi e sempre será importante pra mim. Quer ver a terceira caixa? Então corre Emily kkkkkkkk ❤️"},
+      {x: 2, y: 5, message: "❤️ Você é a minha parceira pra tudo. Mesmo nas brigas ou na tristeza, eu sempre estarei aos seus pés esperando por você. Pois você é quem me tira da escuridão e dos meus piores pesadelos ❤️"},
+      {x: 7, y: 7, message: "❤️ Chegamos à última caixa. O pior desafio entre elas. Representa o tempo em que estamos juntos, mesmo distantes. Ela representa a minha fidelidade e respeito por você. Por mais que apareçam caixas e por mais que pareçam impossíveis, eu ainda estarei lá por você. Pois você é o amor da minha vida. Eu nunca a abandonarei. E desculpe por tudo que fiz pra te deixar com asma. Eu não sei demonstrar amor, mas sempre a amei. Feliz dia dos namorados, Duda ❤️"}
+    ];
+
+    const msgBox = document.getElementById("msgBox");
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(player.sprite, player.x * tileSize, player.y * tileSize, tileSize, tileSize);
+
+      boxes.forEach(box => {
+        ctx.fillStyle = "pink";
+        ctx.fillRect(box.x * tileSize + 8, box.y * tileSize + 8, 16, 16);
+      });
+    }
+
+    function showMessage(text) {
+      msgBox.textContent = text;
+      msgBox.style.display = "block";
+      setTimeout(() => {
+        msgBox.style.display = "none";
+      }, 7000);
+    }
+
+    function checkBox() {
+      boxes.forEach(box => {
+        if (box.x === player.x && box.y === player.y) {
+          showMessage(box.message);
+        }
+      });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowUp": if (player.y > 0) player.y--; break;
+        case "ArrowDown": if (player.y < mapSize - 1) player.y++; break;
+        case "ArrowLeft": if (player.x > 0) player.x--; break;
+        case "ArrowRight": if (player.x < mapSize - 1) player.x++; break;
+      }
+      draw();
+      checkBox();
+    });
+
+    player.sprite.onload = draw;
+  </script>
+</body>
+</html>
